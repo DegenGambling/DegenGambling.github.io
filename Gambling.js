@@ -192,6 +192,11 @@ function updateRound() {
 }
 
 async function getRound() {
+    if (username == "TEMP") {
+        document.getElementById("usernameNOW").hidden = false;
+        document.getElementById("loggedIn").hidden = true;
+    }
+    document.getElementById("hdder").innerHTML = `Degenerate Gambling - User: ${username}, Cash: $${userCash}`
     await fetch("https://hack-box.vercel.app/degenGambling/currentRound").then(data => {
         data.json().then(response => {
             roundActive = response["active"];
@@ -252,7 +257,28 @@ async function getMyStuff() {
     });
 }
 
-getRound();
+function submitUsername() {
+    console.log(document.getElementById("USERNAME").value);
+    username = document.getElementById("USERNAME").value;
+    fetch(`https://hack-box.vercel.app/degenGambling/createUser/${username}`)
+    document.cookie = `username=${username}`
+    setTimeout(() => {
+        document.getElementById("usernameNOW").hidden = true;
+        document.getElementById("loggedIn").hidden = false;
+        getRound();
+    }, 10000);
+}
+
+cookies = document.cookie.split(";");
+for (i = 0; i < cookies.length; i++) {
+    if (cookies[i].startsWith("username=")){
+        username = cookies[i].substring(9);
+    }
+}
+
+setTimeout(() => {
+    getRound();
+}, 1000);
 
 
 /**
