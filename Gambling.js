@@ -162,8 +162,7 @@ function storeData() {
 
 odds = [[], oneToTwo, oneToOne, threeToOne, fiveToOne, tenToOne, hundredToOne];
 
-function incrementRound() {
-    roundNumber = roundNumber + 1;
+function updateRound() {
 
     for (i=1; i<7; i++){
         str = `Bet${i}CurrentBet`;
@@ -180,11 +179,21 @@ function incrementRound() {
 
         document.getElementById(str).innerHTML = `${conditional}<br>&emsp;&emsp;<b>${currentBet}</b>`;
     }
-    
-
-    storeData();
 }
 
+async function getRound() {
+    await fetch("https://hack-box.vercel.app/degenGambling/currentRound").then(data => {
+        data.json().then(response => {
+            roundNumber = response["r"];
+        });
+    });
+    updateRound();
+    setTimeout(() => {
+        getRound();
+    }, 1000);
+}
+
+getRound();
 
 
 /**
