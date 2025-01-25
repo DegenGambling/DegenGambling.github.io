@@ -172,7 +172,7 @@ function incrementRound() {
         if (currentBet.endsWith("(1)")) {
             conditional = "In at least one of the two scenes: ";
         } else {
-            conditional = "In both of the scenes: ";f
+            conditional = "In both of the scenes: ";
         }
 
         currentBet = currentBet.replace(" (1)", "").replace(" (2)", "");
@@ -220,6 +220,7 @@ function incrementRound() {
  * 
  * Like overall this project isn't really that bad. I just should have started a few days ago and not have left it for a DAY OF project. Let's see what I can do with a max of four hours.
  * 
+ * Good luck.
  * 
  * Hour one:
  * - User interface
@@ -231,6 +232,4 @@ function incrementRound() {
  * 
  * Hour three:
  * - Host interface
- * 
- * Going to make the github pages now, add self as contributor so that I can push from here.
  */
