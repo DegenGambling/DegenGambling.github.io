@@ -36,7 +36,8 @@ oneToTwo = [
 "No fourth wall breaks (2)",
 "A setting is named (1)",
 "No denials (2)",
-"No one says the word “awesome” (2)"]
+"No one says the word “awesome” (2)",
+"YOU SHOULDN'T BE SEEING THIS FOR A LONG TIME (1)"]
 
 //1-1 odds (ex. $10 —> +$10 —-> $20)
 oneToOne = [
@@ -59,7 +60,8 @@ oneToOne = [
 "No one stands still for the entire scene (2)",
 "No words are said for the first 4 seconds of a scene (1)",
 "At least one character is named (1)",
-"Someone makes an exclamation (ex. Woah, wow, dang, etc.) (2)"]
+"Someone makes an exclamation (ex. Woah, wow, dang, etc.) (2)",
+"YOU SHOULDN'T BE SEEING THIS FOR A LONG TIME (1)"]
 
 //3-1 odds (ex. $10—-> +$30 —-> $40)
 threeToOne = [
@@ -82,7 +84,8 @@ threeToOne = [
 "No argument scenes (2)",
 "A food is mentioned (1)",
 "No words are said for the first 4 seconds of a scene (2)",
-"Parent-child dynamic (1)"]
+"Parent-child dynamic (1)",
+"YOU SHOULDN'T BE SEEING THIS FOR A LONG TIME (1)"]
 
 //5-1 odds (ex.  $10—-> +$50 —-> $60)
 fiveToOne = [
@@ -105,7 +108,8 @@ fiveToOne = [
 "Player eats on stage (1)",
 "A color is mentioned (1)",
 "The word “ok” is never mentioned (2)",
-"A city, state, or country is mentioned (1)"]
+"A city, state, or country is mentioned (1)",
+"YOU SHOULDN'T BE SEEING THIS FOR A LONG TIME (1)"]
 
 //10-1 odds (ex.  $10—-> +$100 —-> $110)
 tenToOne = [
@@ -128,7 +132,8 @@ tenToOne = [
 "Someone plays a known fictional or non-fictional character (1)",
 "A character starts dancing (1)",
 "An animal is mentioned (2)",
-"A food is mentioned (2)"]
+"A food is mentioned (2)",
+"YOU SHOULDN'T BE SEEING THIS FOR A LONG TIME (1)"]
 
 //100-1 odds (ex.  $10—-> +$1000 —-> $1010)
 hundredToOne = [
@@ -151,12 +156,17 @@ hundredToOne = [
 "A current female pop star is mentioned (1)",
 "A breakfast cereal is mentioned (1)",
 "A US President is mentioned (1)",
-"The word “ocean” is said (1)"]
+"The word “ocean” is said (1)",
+"YOU SHOULDN'T BE SEEING THIS FOR A LONG TIME (1)"]
 
-roundNumber = 0;
+roundNumber = 20;
+userCash = 200;
+roundActive = false;
+submittedThisRound = false;
+username = "TEMP";
 
 function storeData() {
-
+    fetch(`https://hack-box.vercel.app/degenGambling/submitData/${username}/${userCash}/${document.getElementById(`bet${1}In`).value},${document.getElementById(`bet${2}In`).value},${document.getElementById(`bet${3}In`).value},${document.getElementById(`bet${4}In`).value},${document.getElementById(`bet${5}In`).value},${document.getElementById(`bet${6}In`).value}`)
 }
 
 
@@ -184,6 +194,10 @@ function updateRound() {
 async function getRound() {
     await fetch("https://hack-box.vercel.app/degenGambling/currentRound").then(data => {
         data.json().then(response => {
+            roundActive = response["active"];
+            if (roundNumber != response["r"]) {
+                getMyStuff();
+            }
             roundNumber = response["r"];
         });
     });
@@ -191,6 +205,51 @@ async function getRound() {
     setTimeout(() => {
         getRound();
     }, 1000);
+    for (i = 1; i < 7; i++) {
+        document.getElementById(`bet${i}In`).disabled = roundActive || submittedThisRound;
+    }
+    document.getElementById("submitButton").disabled = roundActive || submittedThisRound;
+}
+
+function submitBets() {
+    sum = 0;
+    canSub = true;
+    document.getElementById("cashError").hidden = true;
+    document.getElementById("tenError").hidden = true;
+    document.getElementById("negError").hidden = true;
+    for (i = 1; i < 7; i++) {
+        if (parseInt(document.getElementById(`bet${i}In`).value)%10 != 0) {
+            document.getElementById("tenError").hidden = false;
+            canSub = false;
+        }
+        if (parseInt(document.getElementById(`bet${i}In`).value) < 0) {
+            document.getElementById("negError").hidden = false;
+            canSub = false;
+        }
+        sum += parseInt(document.getElementById(`bet${i}In`).value);
+    }
+    console.log(sum);
+    if (sum > userCash) {
+        document.getElementById("cashError").hidden = false;
+        canSub = false;
+    }
+    if (canSub) {
+        submittedThisRound = true;
+        userCash -= sum;
+        storeData();
+    }
+}
+
+async function getMyStuff() {
+    await fetch(`https://hack-box.vercel.app/degenGambling/getData/${username}`).then(data => {
+        data.json().then(response => {
+            userCash = response["cash"];
+            submittedThisRound = response["btr"];
+            for (i = 1; i < 7; i++) {
+                document.getElementById(`bet${i}In`).value = response[`b${i}`];
+            }
+        });
+    });
 }
 
 getRound();

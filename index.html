@@ -13,6 +13,9 @@
     <body>
         <div style="position: relative; margin-top: 7vh; word-wrap: break-word;">
             <h1 style="color: black;">Degenerate Gambling VERY TEMP Dashboard</h1>
+            <h1 id="cashError" style="color: red;" hidden>HEY, YOU DON'T HAVE THAT MUCH MONEY!</h1>
+            <h1 id="tenError" style="color: red;" hidden>Hi, I know this is my fault, but only do multiples of 10. K thanks.</h1>
+            <h1 id="negError" style="color: red;" hidden>Positive bets. Positive bets. Positive bets. Geez.</h1>
             <bet style="position: fixed; left: 25vw; top: 20vh;">
                 <p>Bet 1: ($10 -> $15)</p>
                 <p id="Bet1CurrentBet">PLACEHOLDER</p>
@@ -43,6 +46,7 @@
                 <p id="Bet6CurrentBet">PLACEHOLDER</p>
                 <input id="bet6In" type="number" min="0" step="10" value="0" style="width: 5vw;">
             </bet>
+            <button id="submitButton" style="position: fixed; left: 45vw; top: 80vh" onclick="submitBets()">Submit</button> 
         </div>
     </body>
     
